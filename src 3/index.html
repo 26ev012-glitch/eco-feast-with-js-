@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="EcoFeast — A clean, minimal food waste management, inventory tracking, and community rescue web app.">
+  <meta name="theme-color" content="#10b981">
+  <title>EcoFeast — Food Waste Management System</title>
+
+  <style>
+:root {
+  --bg-primary: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-hover: #f1f5f9;
+  --bg-surface-subtle: #f8fafc;
+  --border-subtle: #e2e8f0;
+  --border-focus: #10b981;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --text-inverse: #ffffff;
+  --primary: #10b981;
+  --primary-hover: #059669;
+  --primary-light: #ecfdf5;
+  --primary-glow: rgba(16, 185, 129, 0.15);
+  --status-fresh: #10b981;
+  --status-fresh-bg: #ecfdf5;
+  --status-fresh-border: #a7f3d0;
+  --status-warning: #f59e0b;
+  --status-warning-bg: #fffbeb;
+  --status-warning-border: #fde68a;
+  --status-danger: #ef4444;
+  --status-danger-bg: #fef2f2;
+  --status-danger-border: #fecaca;
+  --status-info: #0284c7;
+  --status-info-bg: #f0f9ff;
+  --status-info-border: #bae6fd;
+  --shadow-xs: 0 1px 2px 0 rgba(0,0,0,0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0,0,0,0.07), 0 1px 2px -1px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.03);
+  --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.04);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --radius-full: 9999px;
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 350ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  --nav-height: 64px;
+  --bottom-bar-height: 64px;
+  --max-width: 1200px;
+}
+
+[data-theme="dark"] {
+  --bg-primary: #090d16;
+  --bg-surface: #131c2e;
+  --bg-surface-hover: #1e293b;
+  --bg-surface-subtle: #0d1524;
+  --border-subtle: #1e293b;
+  --border-focus: #34d399;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-inverse: #0f172a;
+  --primary: #10b981;
+  --primary-hover: #34d399;
+  --primary-light: rgba(16,185,129,0.15);
+  --primary-glow: rgba(16,185,129,0.25);
+  --status-fresh-bg: rgba(16,185,129,0.15);
+  --status-fresh-border: rgba(16,185,129,0.3);
+  --status-warning-bg: rgba(245,158,11,0.15);
+  --status-warning-border: rgba(245,158,11,0.3);
+  --status-danger-bg: rgba(239,68,68,0.15);
+  --status-danger-border: rgba(239,68,68,0.3);
+  --status-info-bg: rgba(2,132,199,0.15);
+  --status-info-border: rgba(2,132,199,0.3);
+  --shadow-xs: 0 1px 2px 0 rgba(0,0,0,0.3);
+  --shadow-sm: 0 1px 3px 0 rgba(0,0,0,0.4);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.5);
+  --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.6);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+
+.site-header {
+  position: sticky; top: 0; z-index: 50;
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  backdrop-filter: blur(12px);
+  height: var(--nav-height);
+  transition: background-color var(--transition-normal), border-color var(--transition-normal);
+}
+.header-container {
+  max-width: var(--max-width); margin: 0 auto; padding: 0 1.25rem; height: 100%;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+}
+.brand-wrapper {
+  display: flex; align-items: center; gap: 0.625rem; text-decoration: none;
+  color: var(--text-primary); font-weight: 700; font-size: 1.15rem; letter-spacing: -0.02em;
+}
+.brand-icon {
+  width: 34px; height: 34px; background: linear-gradient(135deg, var(--primary), #059669);
+  color: white; border-radius: var(--radius-md); display: flex; align-items: center;
+  justify-content: center; font-size: 1.1rem; box-shadow: 0 2px 8px var(--primary-glow);
+}
+.brand-name span { color: var(--primary); }
+
+.desktop-nav {
+  display: none; align-items: center; gap: 0.35rem; background: var(--bg-surface-subtle);
+  padding: 0.25rem; border-radius: var(--radius-full); border: 1px solid var(--border-subtle);
+}
+.nav-link {
+  display: flex; align-items: center; gap: 0.5rem; padding: 0.45rem 1rem; font-size: 0.875rem;
+  font-weight: 500; color: var(--text-secondary); border: none; background: transparent;
+  border-radius: var(--radius-full); cursor: pointer; transition: all var(--transition-fast);
+  text-decoration: none; white-space: nowrap;
+}
+.nav-link:hover { color: var(--text-primary); background: var(--bg-surface-hover); }
+.nav-link.active { background: var(--bg-surface); color: var(--primary); font-weight: 600; box-shadow: var(--shadow-xs); }
+
+.header-actions { display: flex; align-items: center; gap: 0.5rem; }
+.btn-icon {
+  width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--border-subtle); background: var(--bg-surface); color: var(--text-secondary);
+  border-radius: var(--radius-full); cursor: pointer; transition: all var(--transition-fast);
+}
+.btn-icon:hover { color: var(--text-primary); background: var(--bg-surface-hover); border-color: var(--text-muted); }
+.theme-toggle svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.main-wrapper { flex: 1; max-width: var(--max-width); width: 100%; margin: 0 auto; padding: 1.5rem 1.25rem 5.5rem; }
+@media (min-width: 768px) {
+  .desktop-nav { display: flex; }
+  .main-wrapper { padding-bottom: 2.5rem; }
+}
+
+.tab-section { display: none; animation: fadeIn 0.25s ease forwards; }
+.tab-section.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+.section-header { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem; }
+@media (min-width: 640px) { .section-header { flex-direction: row; align-items: center; justify-content: space-between; } }
+.section-title { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; color: var(--text-primary); }
+.section-desc { font-size: 0.875rem; color: var(--text-secondary); margin-top: 0.2rem; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  padding: 0.55rem 1.15rem; font-size: 0.875rem; font-weight: 600; border-radius: var(--radius-md);
+  border: 1px solid transparent; cursor: pointer; transition: all var(--transition-fast); white-space: nowrap;
+}
+.btn-primary { background: var(--primary); color: white; box-shadow: 0 2px 6px var(--primary-glow); }
+.btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+.btn-secondary { background: var(--bg-surface); border-color: var(--border-subtle); color: var(--text-secondary); }
+.btn-secondary:hover { background: var(--bg-surface-hover); color: var(--text-primary); border-color: var(--text-muted); }
+.btn-danger { background: var(--status-danger); color: white; }
+.btn-danger:hover { background: #dc2626; }
+.btn-sm { padding: 0.35rem 0.75rem; font-size: 0.8rem; border-radius: var(--radius-sm); }
+
+.metrics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1.75rem; }
+@media (min-width: 1024px) { .metrics-grid { grid-template-columns: repeat(4, 1fr); } }
+.metric-card {
+  background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);
+  padding: 1.15rem; display: flex; flex-direction: column; gap: 0.625rem; position: relative;
+  overflow: hidden; box-shadow: var(--shadow-xs);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+.metric-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.metric-card-top { display: flex; align-items: center; justify-content: space-between; }
+.metric-icon-box { width: 38px; height: 38px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 1.15rem; }
+.metric-icon-green { background: var(--status-fresh-bg); color: var(--status-fresh); }
+.metric-icon-blue { background: var(--status-info-bg); color: var(--status-info); }
+.metric-icon-amber { background: var(--status-warning-bg); color: var(--status-warning); }
+.metric-icon-purple { background: rgba(147,51,234,0.12); color: #9333ea; }
+.metric-trend { font-size: 0.75rem; font-weight: 600; display: flex; align-items: center; gap: 0.2rem; padding: 0.15rem 0.5rem; border-radius: var(--radius-full); }
+.trend-up { background: var(--status-fresh-bg); color: var(--status-fresh); }
+.metric-value { font-size: 1.65rem; font-weight: 700; letter-spacing: -0.03em; color: var(--text-primary); line-height: 1.1; }
+.metric-label { font-size: 0.825rem; color: var(--text-secondary); font-weight: 500; }
+
+.quick-action-banner {
+  background: linear-gradient(135deg, var(--bg-surface), var(--bg-surface-subtle));
+  border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem;
+  margin-bottom: 1.75rem; display: flex; flex-direction: column; gap: 1rem; box-shadow: var(--shadow-xs);
+}
+@media (min-width: 768px) { .quick-action-banner { flex-direction: row; align-items: center; justify-content: space-between; } }
+.banner-content h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem; }
+.banner-content p { font-size: 0.85rem; color: var(--text-secondary); }
+.banner-buttons { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+.dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+@media (min-width: 900px) { .dashboard-grid { grid-template-columns: 1.3fr 0.9fr; } }
+.card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 1.25rem; box-shadow: var(--shadow-xs); }
+.card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.card-title { font-size: 1.05rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; color: var(--text-primary); }
+
+.radar-list { display: flex; flex-direction: column; gap: 0.75rem; }
+.radar-item {
+  display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem;
+  border-radius: var(--radius-md); background: var(--bg-surface-subtle); border: 1px solid var(--border-subtle);
+  transition: all var(--transition-fast);
+}
+.radar-item:hover { background: var(--bg-surface-hover); transform: translateX(2px); }
+.radar-item-left { display: flex; align-items: center; gap: 0.75rem; }
+.radar-icon { font-size: 1.4rem; }
+.radar-name { font-weight: 600; font-size: 0.925rem; color: var(--text-primary); }
+.radar-meta { font-size: 0.8rem; color: var(--text-secondary); display: flex; align-items: center; gap: 0.4rem; }
+.radar-item-actions { display: flex; align-items: center; gap: 0.4rem; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-full); font-size: 0.725rem; font-weight: 600;
+  text-transform: capitalize; border: 1px solid transparent;
+}
+.badge-fresh { background: var(--status-fresh-bg); color: var(--status-fresh); border-color: var(--status-fresh-border); }
+.badge-warning { background: var(--status-warning-bg); color: var(--status-warning); border-color: var(--status-warning-border); }
+.badge-danger { background: var(--status-danger-bg); color: var(--status-danger); border-color: var(--status-danger-border); }
+.badge-secondary { background: var(--bg-surface-subtle); color: var(--text-secondary); border-color: var(--border-subtle); }
+
+.filter-bar { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.25rem; }
+@media (min-width: 768px) { .filter-bar { flex-direction: row; align-items: center; justify-content: space-between; } }
+.search-input-wrapper { position: relative; flex: 1; max-width: 380px; }
+.search-input-wrapper svg { position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; stroke: var(--text-muted); }
+.search-input {
+  width: 100%; padding: 0.55rem 0.85rem 0.55rem 2.4rem; background: var(--bg-surface);
+  border: 1px solid var(--border-subtle); border-radius: var(--radius-full); font-size: 0.875rem;
+  color: var(--text-primary); outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
+.filter-pills { display: flex; gap: 0.35rem; overflow-x: auto; padding-bottom: 0.25rem; scrollbar-width: none; }
+.filter-pills::-webkit-scrollbar { display: none; }
+.filter-pill {
+  padding: 0.35rem 0.85rem; font-size: 0.8rem; font-weight: 500; border-radius: var(--radius-full);
+  background: var(--bg-surface); border: 1px solid var(--border-subtle); color: var(--text-secondary);
+  cursor: pointer; white-space: nowrap; transition: all var(--transition-fast);
+}
+.filter-pill:hover { background: var(--bg-surface-hover); color: var(--text-primary); }
+.filter-pill.active { background: var(--primary); color: white; border-color: var(--primary); font-weight: 600; }
+
+.inventory-grid { display: grid; grid-template-columns: 1fr; gap: 0.85rem; }
+@media (min-width: 640px) { .inventory-grid { grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); } }
+.inventory-card {
+  background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);
+  padding: 1rem; display: flex; flex-direction: column; justify-content: space-between; gap: 0.75rem;
+  position: relative; box-shadow: var(--shadow-xs); transition: all var(--transition-fast);
+}
+.inventory-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--text-muted); }
+.inventory-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; }
+.inventory-card-title-group { display: flex; align-items: center; gap: 0.6rem; }
+.category-avatar {
+  width: 42px; height: 42px; border-radius: var(--radius-md); background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: center; font-size: 1.35rem;
+}
+.item-name { font-size: 0.95rem; font-weight: 600; color: var(--text-primary); line-height: 1.25; }
+.item-quantity { font-size: 0.775rem; color: var(--text-secondary); }
+.inventory-card-body { display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.825rem; color: var(--text-secondary); }
+.inventory-meta-row { display: flex; justify-content: space-between; align-items: center; }
+.progress-track { width: 100%; height: 5px; background: var(--border-subtle); border-radius: var(--radius-full); overflow: hidden; margin-top: 0.25rem; }
+.progress-fill { height: 100%; border-radius: var(--radius-full); transition: width 0.3s ease; }
+.inventory-card-actions { display: flex; align-items: center; justify-content: space-between; padding-top: 0.65rem; border-top: 1px solid var(--border-subtle); gap: 0.4rem; }
+.inventory-actions-group { display: flex; gap: 0.35rem; }
+
+.empty-state {
+  text-align: center; padding: 3rem 1.5rem; background: var(--bg-surface); border: 1px dashed var(--border-subtle);
+  border-radius: var(--radius-lg); display: flex; flex-direction: column; align-items: center; gap: 0.75rem; grid-column: 1 / -1;
+}
+.empty-state-icon { font-size: 2.5rem; }
+.empty-state-title { font-size: 1.1rem; font-weight: 600; color: var(--text-primary); }
+.empty-state-desc { font-size: 0.85rem; color: var(--text-secondary); max-width: 320px; }
+
+.donation-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+@media (min-width: 640px) { .donation-grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); } }
+.donation-card {
+  background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);
+  padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; gap: 1rem;
+  box-shadow: var(--shadow-xs); transition: all var(--transition-fast);
+}
+.donation-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.donor-badge { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); }
+.donation-tags { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+.foodbank-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+@media (min-width: 768px) { .foodbank-grid { grid-template-columns: repeat(2, 1fr); } }
+.foodbank-card {
+  background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);
+  padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; box-shadow: var(--shadow-xs);
+}
+.foodbank-header { display: flex; align-items: flex-start; justify-content: space-between; }
+.foodbank-title { font-size: 1rem; font-weight: 600; color: var(--text-primary); }
+.foodbank-info-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.825rem; color: var(--text-secondary); }
+
+.recipe-matcher-banner {
+  background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(2,132,199,0.08));
+  border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; margin-bottom: 1.5rem;
+}
+.recipe-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+@media (min-width: 768px) { .recipe-grid { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); } }
+.recipe-card {
+  background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);
+  padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; gap: 1rem;
+  box-shadow: var(--shadow-xs); transition: all var(--transition-fast);
+}
+.recipe-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.recipe-card-header { display: flex; align-items: flex-start; justify-content: space-between; }
+.recipe-title { font-size: 1.05rem; font-weight: 600; color: var(--text-primary); }
+.recipe-stats { display: flex; align-items: center; gap: 0.75rem; font-size: 0.785rem; color: var(--text-secondary); margin-top: 0.35rem; }
+.ingredient-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.ingredient-chip {
+  padding: 0.2rem 0.55rem; font-size: 0.75rem; border-radius: var(--radius-full);
+  background: var(--bg-surface-subtle); border: 1px solid var(--border-subtle); color: var(--text-secondary);
+}
+.ingredient-chip.match { background: var(--status-fresh-bg); border-color: var(--status-fresh-border); color: var(--status-fresh); font-weight: 600; }
+.storage-search-box { margin-bottom: 1.25rem; }
+.storage-grid { display: grid; grid-template-columns: 1fr; gap: 0.85rem; }
+@media (min-width: 640px) { .storage-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); } }
+.storage-card {
+  background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
+  padding: 1rem; display: flex; flex-direction: column; gap: 0.5rem; box-shadow: var(--shadow-xs);
+}
+.storage-card-title { font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; justify-content: space-between; }
+.storage-tip { font-size: 0.825rem; color: var(--text-secondary); line-height: 1.4; }
+
+.analytics-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+@media (min-width: 768px) { .analytics-grid { grid-template-columns: 1fr 1fr; } }
+.chart-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 240px; position: relative; }
+.canvas-wrapper { width: 100%; max-width: 280px; height: 200px; display: flex; align-items: center; justify-content: center; }
+.chart-legend { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; margin-top: 1rem; }
+.legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.785rem; color: var(--text-secondary); }
+.legend-color { width: 10px; height: 10px; border-radius: var(--radius-full); }
+.audit-tips-list { display: flex; flex-direction: column; gap: 0.75rem; }
+.audit-tip-item {
+  display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.85rem; background: var(--bg-surface-subtle);
+  border-radius: var(--radius-md); border-left: 3px solid var(--primary); font-size: 0.85rem; color: var(--text-secondary);
+}
+.audit-tip-item strong { color: var(--text-primary); display: block; margin-bottom: 0.2rem; }
+
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 100; background: rgba(15,23,42,0.55); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center; padding: 1rem;
+  opacity: 0; visibility: hidden; transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+.modal-overlay.active { opacity: 1; visibility: visible; }
+.modal-content {
+  background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);
+  width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-xl);
+  transform: translateY(16px) scale(0.98); transition: transform 0.25s var(--transition-bounce);
+}
+.modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
+.modal-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between; }
+.modal-title { font-size: 1.15rem; font-weight: 700; color: var(--text-primary); }
+.modal-close {
+  background: transparent; border: none; font-size: 1.25rem; color: var(--text-muted); cursor: pointer;
+  border-radius: var(--radius-full); width: 32px; height: 32px; display: flex; align-items: center;
+  justify-content: center; transition: all var(--transition-fast);
+}
+.modal-close:hover { background: var(--bg-surface-hover); color: var(--text-primary); }
+.modal-body { padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 1.1rem; }
+.modal-footer {
+  padding: 1rem 1.5rem; border-top: 1px solid var(--border-subtle); display: flex; align-items: center;
+  justify-content: flex-end; gap: 0.6rem; background: var(--bg-surface-subtle);
+}
+
+.form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.form-label { font-size: 0.825rem; font-weight: 600; color: var(--text-secondary); }
+.form-input, .form-select, .form-textarea {
+  width: 100%; padding: 0.6rem 0.85rem; background: var(--bg-surface); border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md); font-size: 0.875rem; color: var(--text-primary); outline: none;
+  font-family: inherit; transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
+.form-textarea { min-height: 80px; resize: vertical; }
+
+.mobile-bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; height: var(--bottom-bar-height);
+  background: var(--bg-surface); border-top: 1px solid var(--border-subtle);
+  display: flex; align-items: center; justify-content: space-around; z-index: 45;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.05); transition: background-color var(--transition-normal);
+}
+@media (min-width: 768px) { .mobile-bottom-nav { display: none; } }
+.bottom-nav-item {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.2rem;
+  background: transparent; border: none; color: var(--text-muted); font-size: 0.7rem; font-weight: 500;
+  cursor: pointer; flex: 1; height: 100%; padding: 0.35rem 0; transition: color var(--transition-fast);
+}
+.bottom-nav-item svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform var(--transition-fast); }
+.bottom-nav-item.active { color: var(--primary); font-weight: 600; }
+.bottom-nav-item.active svg { transform: translateY(-2px); }
+
+.fab-btn {
+  display: flex; position: fixed; bottom: calc(var(--bottom-bar-height) + 16px); right: 18px;
+  width: 52px; height: 52px; border-radius: var(--radius-full); background: var(--primary); color: white;
+  align-items: center; justify-content: center; font-size: 1.5rem;
+  box-shadow: var(--shadow-lg), 0 4px 14px var(--primary-glow); border: none; cursor: pointer; z-index: 40;
+  transition: transform var(--transition-bounce), background-color var(--transition-fast);
+}
+.fab-btn:hover { background: var(--primary-hover); transform: scale(1.08); }
+@media (min-width: 768px) { .fab-btn { display: none; } }
+
+.toast-container { position: fixed; top: 1rem; right: 1rem; z-index: 200; display: flex; flex-direction: column; gap: 0.5rem; pointer-events: none; max-width: 90vw; width: 360px; }
+.toast {
+  background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
+  padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.75rem; box-shadow: var(--shadow-lg);
+  pointer-events: auto; animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; font-size: 0.85rem;
+}
+.toast.toast-success { border-left: 4px solid var(--primary); }
+.toast.toast-error { border-left: 4px solid var(--status-danger); }
+.toast.toast-info { border-left: 4px solid var(--status-info); }
+@keyframes slideInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+.toast-closing { animation: slideOutRight 0.25s ease forwards; }
+@keyframes slideOutRight { to { opacity: 0; transform: translateX(40px); } }
+
+.hide-mobile { display: none; }
+@media (min-width: 640px) { .hide-mobile { display: inline; } }
+.hide-desktop { display: inline; }
+@media (min-width: 640px) { .hide-desktop { display: none; } }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-container">
+      <a href="#" class="brand-wrapper" data-tab="dashboard">
+        <div class="brand-icon">🌱</div>
+        <div class="brand-name">Eco<span>Feast</span></div>
+      </a>
+
+      <nav class="desktop-nav" aria-label="Desktop Navigation">
+        <button class="nav-link active" data-tab="dashboard"><span>📊</span> Dashboard</button>
+        <button class="nav-link" data-tab="inventory"><span>🥗</span> Inventory</button>
+        <button class="nav-link" data-tab="community"><span>🤝</span> Community</button>
+        <button class="nav-link" data-tab="recipes"><span>💡</span> Zero-Waste Kitchen</button>
+        <button class="nav-link" data-tab="analytics"><span>📈</span> Analytics</button>
+      </nav>
+
+      <div class="header-actions">
+        <button class="btn btn-secondary btn-sm" onclick="exportDataAsJSON()" title="Export your inventory data as JSON">
+          <span>💾</span> <span class="hide-mobile">Export</span>
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="resetSampleData()" title="Reset to default demo data">
+          <span>🔄</span> <span class="hide-mobile">Reset</span>
+        </button>
+        <button class="btn-icon theme-toggle" id="themeToggle" aria-label="Toggle Dark / Light Theme" title="Toggle Theme">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrapper">
+
+    <!-- DASHBOARD -->
+    <section id="tab-dashboard" class="tab-section active">
+      <div class="section-header">
+        <div>
+          <h1 class="section-title">Waste Impact Dashboard</h1>
+          <p class="section-desc">Track real-time pantry freshness, financial savings, and environmental rescue metrics.</p>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('addItemModal')"><span>+</span> Add Food Item</button>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-card-top">
+            <div class="metric-icon-box metric-icon-green">🥗</div>
+            <span class="metric-trend trend-up">Active</span>
+          </div>
+          <div>
+            <div class="metric-value" id="metricFoodSaved">0.0 kg</div>
+            <div class="metric-label">Food Rescued & Consumed</div>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-card-top">
+            <div class="metric-icon-box metric-icon-blue">💵</div>
+            <span class="metric-trend trend-up">Saved</span>
+          </div>
+          <div>
+            <div class="metric-value" id="metricMoneySaved">$0.00</div>
+            <div class="metric-label">Estimated Money Saved</div>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-card-top">
+            <div class="metric-icon-box metric-icon-purple">🌍</div>
+            <span class="metric-trend trend-up">Eco Gain</span>
+          </div>
+          <div>
+            <div class="metric-value" id="metricCO2Saved">0.0 kg</div>
+            <div class="metric-label">CO₂e Emissions Prevented</div>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-card-top">
+            <div class="metric-icon-box metric-icon-amber">🤝</div>
+            <span class="metric-trend trend-up">Community</span>
+          </div>
+          <div>
+            <div class="metric-value" id="metricMealsDonated">0 meals</div>
+            <div class="metric-label">Surplus Meals Shared</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="quick-action-banner">
+        <div class="banner-content">
+          <h3>⚡ Action Alert: Food Expiry Radar</h3>
+          <p>Don't let good food spoil! Mark items as eaten, discover instant zero-waste recipes, or share surplus with neighbors.</p>
+        </div>
+        <div class="banner-buttons">
+          <button class="btn btn-primary btn-sm" data-tab="recipes"><span>🍳</span> Find Matching Recipes</button>
+          <button class="btn btn-secondary btn-sm" data-tab="community"><span>🤝</span> Donate Surplus</button>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span>⏱️</span> Expiring Soon (<span id="radarThreshold">3 Days</span>)</div>
+            <button class="btn btn-secondary btn-sm" data-tab="inventory">View All Pantry →</button>
+          </div>
+          <div class="radar-list" id="radarList"></div>
+        </div>
+
+        <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div class="card-header">
+              <div class="card-title"><span>💡</span> Daily Zero-Waste Tip</div>
+              <span class="badge badge-fresh">Did you know?</span>
+            </div>
+            <div style="background: var(--bg-surface-subtle); padding: 1rem; border-radius: var(--radius-md); border-left: 3px solid var(--primary); margin-bottom: 1rem;">
+              <h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--text-primary);">The "Float Test" for Egg Freshness</h4>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.45;">
+                Before throwing away eggs past their carton date, place one gently in a bowl of cold water. If it sinks to the bottom and lays flat, it's very fresh. If it stands on its end, it's still safe to eat (cook thoroughly). If it floats to the top, toss it!
+              </p>
+            </div>
+            <div style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4;">
+              <strong>Global Impact Fact:</strong> Almost 30% of all food produced globally is never eaten. Storing your food properly is the single most effective household climate action.
+            </div>
+          </div>
+          <div style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Explore our A–Z storage hacks</span>
+            <button class="btn btn-secondary btn-sm" data-tab="recipes">Open Storage Guide →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INVENTORY -->
+    <section id="tab-inventory" class="tab-section">
+      <div class="section-header">
+        <div>
+          <h1 class="section-title">Pantry & Fridge Tracker</h1>
+          <p class="section-desc">Manage what's in your kitchen, track expiry countdowns, and prevent spoiled groceries.</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span class="badge badge-secondary" id="inventoryCountBadge">0 items</span>
+          <button class="btn btn-primary" onclick="openModal('addItemModal')"><span>+</span> Add Item</button>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <div class="search-input-wrapper">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="inventorySearch" class="search-input" placeholder="Search item, category, or note...">
+        </div>
+        <div class="filter-pills">
+          <button class="filter-pill active" data-location-filter="all">All Spots</button>
+          <button class="filter-pill" data-location-filter="Fridge">❄️ Fridge</button>
+          <button class="filter-pill" data-location-filter="Freezer">🧊 Freezer</button>
+          <button class="filter-pill" data-location-filter="Pantry">🥫 Pantry</button>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
+        <div class="filter-pills">
+          <button class="filter-pill active" data-status-filter="all">All Items</button>
+          <button class="filter-pill" data-status-filter="expiring">⚠️ Expiring Soon (≤3d)</button>
+          <button class="filter-pill" data-status-filter="fresh">🟢 Fresh (>3d)</button>
+          <button class="filter-pill" data-status-filter="expired">🔴 Past Expiry</button>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-secondary);">
+          <label for="inventorySort">Sort by:</label>
+          <select id="inventorySort" class="form-select" style="width: auto; padding: 0.35rem 0.65rem; font-size: 0.8rem;">
+            <option value="expiry-asc">Expiry: Soonest First</option>
+            <option value="expiry-desc">Expiry: Furthest First</option>
+            <option value="name-asc">Name: A to Z</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="inventory-grid" id="inventoryGrid"></div>
+    </section>
+
+    <!-- COMMUNITY -->
+    <section id="tab-community" class="tab-section">
+      <div class="section-header">
+        <div>
+          <h1 class="section-title">Community Food Redistribution</h1>
+          <p class="section-desc">Share surplus meals with neighbors, claim fresh surplus, and find local food banks.</p>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('addDonationModal')"><span>🤝</span> Post Surplus Food</button>
+      </div>
+
+      <div style="margin-bottom: 2.5rem;">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 1rem; gap: 0.5rem;">
+          <h2 style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem;">
+            <span>🍲</span> Available Surplus Food Near You
+          </h2>
+          <div class="filter-pills">
+            <button class="filter-pill active" data-donation-cat="all">All Categories</button>
+            <button class="filter-pill" data-donation-cat="Bakery">Bakery</button>
+            <button class="filter-pill" data-donation-cat="Cooked">Prepared Meals</button>
+            <button class="filter-pill" data-donation-cat="Produce">Fresh Produce</button>
+          </div>
+        </div>
+        <div class="donation-grid" id="donationList"></div>
+      </div>
+
+      <div>
+        <div class="section-header" style="margin-bottom: 1rem;">
+          <div>
+            <h2 style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem;">
+              <span>🏢</span> Verified Food Banks & 24/7 Community Fridges
+            </h2>
+            <p class="section-desc">Drop off donations or direct surplus to community partners.</p>
+          </div>
+          <div class="search-input-wrapper">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="foodbankSearch" class="search-input" placeholder="Search food bank by name or location...">
+          </div>
+        </div>
+        <div class="foodbank-grid" id="foodbankList"></div>
+      </div>
+    </section>
+
+    <!-- RECIPES -->
+    <section id="tab-recipes" class="tab-section">
+      <div class="section-header">
+        <div>
+          <h1 class="section-title">Zero-Waste Kitchen & Storage Guide</h1>
+          <p class="section-desc">Turn expiring ingredients into meals and master preservation hacks to extend shelf life.</p>
+        </div>
+      </div>
+
+      <div class="recipe-matcher-banner">
+        <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
+          <span>🎯</span> "Rescue Radar" Ingredients in Your Kitchen
+        </h3>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.65rem;">
+          These recipes automatically match items expiring soon in your fridge or pantry:
+        </p>
+        <div class="ingredient-chips" id="expiringIngredientsList"></div>
+      </div>
+
+      <div style="margin-bottom: 2.5rem;">
+        <h2 style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.4rem;">
+          <span>🍳</span> Smart Zero-Waste Recipes
+        </h2>
+        <div class="recipe-grid" id="recipeGrid"></div>
+      </div>
+
+      <div>
+        <div class="section-header" style="margin-bottom: 1rem;">
+          <div>
+            <h2 style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem;">
+              <span>📚</span> A–Z Food Preservation & Storage Encyclopedia
+            </h2>
+            <p class="section-desc">Quick lookup for optimal storage temperatures, crisper methods, and shelf-life hacks.</p>
+          </div>
+          <div class="search-input-wrapper">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="storageSearch" class="search-input" placeholder="Search food staple (e.g. bananas, milk, herbs)...">
+          </div>
+        </div>
+        <div class="storage-grid" id="storageGrid"></div>
+      </div>
+    </section>
+
+    <!-- ANALYTICS -->
+    <section id="tab-analytics" class="tab-section">
+      <div class="section-header">
+        <div>
+          <h1 class="section-title">Waste Analytics & Audit</h1>
+          <p class="section-desc">Detailed breakdown of food habits, cost losses, and personalized reduction recommendations.</p>
+        </div>
+      </div>
+
+      <div class="analytics-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span>🍩</span> Food Consumption vs Waste Ratio</div>
+            <span class="badge badge-fresh">Lifetime Rate</span>
+          </div>
+          <div class="chart-container">
+            <div class="canvas-wrapper"><canvas id="consumedWasteChart"></canvas></div>
+            <div class="chart-legend">
+              <div class="legend-item">
+                <div class="legend-color" style="background: #10b981;"></div>
+                <span>Eaten / Rescued:</span>
+                <strong id="legendConsumedCount" style="color: var(--text-primary);">0 items</strong>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color" style="background: #ef4444;"></div>
+                <span>Wasted:</span>
+                <strong id="legendWastedCount" style="color: var(--text-primary);">0 items</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span>📊</span> Waste by Category Breakdown</div>
+            <span class="badge badge-warning">Hotspots</span>
+          </div>
+          <div style="margin-top: 0.5rem;" id="categoryBreakdownContainer"></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div class="card-header">
+          <div class="card-title"><span>⚖️</span> Financial & Ecological Balance Sheet</div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+          <div style="background: var(--bg-surface-subtle); padding: 1rem; border-radius: var(--radius-md); border-left: 3px solid var(--status-fresh);">
+            <div style="font-size: 0.8rem; color: var(--text-secondary);">Total Money Retained</div>
+            <div style="font-size: 1.4rem; font-weight: 700; color: var(--status-fresh); margin: 0.2rem 0;" id="analyticsMoneySaved">$0.00</div>
+            <div style="font-size: 0.775rem; color: var(--text-muted);" id="analyticsCO2Saved">0 kg CO₂e saved</div>
+          </div>
+          <div style="background: var(--bg-surface-subtle); padding: 1rem; border-radius: var(--radius-md); border-left: 3px solid var(--status-danger);">
+            <div style="font-size: 0.8rem; color: var(--text-secondary);">Estimated Money Lost</div>
+            <div style="font-size: 1.4rem; font-weight: 700; color: var(--status-danger); margin: 0.2rem 0;" id="analyticsMoneyLost">$0.00</div>
+            <div style="font-size: 0.775rem; color: var(--text-muted);" id="analyticsCO2Emitted">0 kg CO₂e emitted</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span>🎯</span> Personalized Waste Reduction Plan</div>
+          <span class="badge badge-secondary">Customized for you</span>
+        </div>
+        <div class="audit-tips-list" id="personalizedTipsList"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="mobile-bottom-nav" aria-label="Mobile Navigation">
+    <button class="bottom-nav-item active" data-tab="dashboard">
+      <svg viewBox="0 0 24 24">
+        <rect x="3" y="3" width="7" height="9" rx="1"></rect>
+        <rect x="14" y="3" width="7" height="5" rx="1"></rect>
+        <rect x="14" y="12" width="7" height="9" rx="1"></rect>
+        <rect x="3" y="16" width="7" height="5" rx="1"></rect>
+      </svg>
+      <span>Home</span>
+    </button>
+    <button class="bottom-nav-item" data-tab="inventory">
+      <svg viewBox="0 0 24 24">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+      </svg>
+      <span>Pantry</span>
+    </button>
+    <button class="bottom-nav-item" data-tab="community">
+      <svg viewBox="0 0 24 24">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+        <circle cx="9" cy="7" r="4"></circle>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+      </svg>
+      <span>Share</span>
+    </button>
+    <button class="bottom-nav-item" data-tab="recipes">
+      <svg viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      <span>Kitchen</span>
+    </button>
+    <button class="bottom-nav-item" data-tab="analytics">
+      <svg viewBox="0 0 24 24">
+        <line x1="18" y1="20" x2="18" y2="10"></line>
+        <line x1="12" y1="20" x2="12" y2="4"></line>
+        <line x1="6" y1="20" x2="6" y2="14"></line>
+      </svg>
+      <span>Audit</span>
+    </button>
+  </nav>
+
+  <button class="fab-btn" onclick="openModal('addItemModal')" aria-label="Add Food Item" title="Add Food Item">+</button>
+
+  <!-- Add Item Modal -->
+  <div class="modal-overlay" id="addItemModal" role="dialog" aria-modal="true" aria-labelledby="modalAddTitle">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalAddTitle">Add Food to Inventory</h3>
+        <button class="modal-close" data-modal-close aria-label="Close dialog">&times;</button>
+      </div>
+      <form id="addItemForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="itemName">Food Item Name *</label>
+            <input type="text" id="itemName" class="form-input" placeholder="e.g. Baby Spinach, Fresh Salmon, Eggs" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="itemCategory">Category</label>
+              <select id="itemCategory" class="form-select">
+                <option value="Produce">🥦 Fresh Produce</option>
+                <option value="Dairy">🧀 Dairy & Eggs</option>
+                <option value="Meat">🥩 Meat & Seafood</option>
+                <option value="Bakery">🥖 Bakery & Bread</option>
+                <option value="Cooked">🍲 Prepared Leftovers</option>
+                <option value="Pantry">🥫 Pantry & Grains</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="itemLocation">Storage Location</label>
+              <select id="itemLocation" class="form-select">
+                <option value="Fridge">❄️ Refrigerator</option>
+                <option value="Freezer">🧊 Freezer</option>
+                <option value="Pantry">🥫 Pantry / Cupboard</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="itemQuantity">Quantity</label>
+              <input type="number" id="itemQuantity" class="form-input" min="0.1" step="0.1" value="1" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="itemUnit">Unit</label>
+              <input type="text" id="itemUnit" class="form-input" placeholder="e.g. bag, pcs, L, kg" value="pcs">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="itemPurchaseDate">Purchase / Logged Date</label>
+              <input type="date" id="itemPurchaseDate" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="itemExpiryDate">Expiry / Best-Before Date *</label>
+              <input type="date" id="itemExpiryDate" class="form-input" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="itemCost">Estimated Cost ($)</label>
+              <input type="number" id="itemCost" class="form-input" min="0" step="0.1" value="3.50">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="itemNotes">Storage Notes / Tips</label>
+              <input type="text" id="itemNotes" class="form-input" placeholder="e.g. Keep in crisper drawer">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary">Save to Inventory</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Waste Reason Modal -->
+  <div class="modal-overlay" id="wasteReasonModal" role="dialog" aria-modal="true" aria-labelledby="modalWasteTitle">
+    <div class="modal-content" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalWasteTitle">Log Food Waste Reason</h3>
+        <button class="modal-close" data-modal-close aria-label="Close dialog">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.9rem; color: var(--text-secondary);">
+          Logging why <strong id="wasteItemName" style="color: var(--text-primary);">this item</strong> wasn't eaten helps generate tailored zero-waste kitchen tips for you.
+        </p>
+        <div class="form-group">
+          <label class="form-label" for="wasteReasonSelect">Primary Reason:</label>
+          <select id="wasteReasonSelect" class="form-select">
+            <option value="Spoiled / Moldy">🦠 Spoiled, moldy, or turned slimy</option>
+            <option value="Forgotten in back">📦 Forgotten in the back of the fridge/pantry</option>
+            <option value="Past Best-Before date">📅 Past labeled expiration date</option>
+            <option value="Cooked too much">🍲 Cooked too much / portion too large</option>
+            <option value="Tasted bad / texture issue">👅 Poor taste or texture</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirmWasteBtn">Log as Wasted</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Donation Modal -->
+  <div class="modal-overlay" id="addDonationModal" role="dialog" aria-modal="true" aria-labelledby="modalDonTitle">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalDonTitle">Post Food for Community Sharing</h3>
+        <button class="modal-close" data-modal-close aria-label="Close dialog">&times;</button>
+      </div>
+      <form id="addDonationForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="donationTitle">Food Title *</label>
+            <input type="text" id="donationTitle" class="form-input" placeholder="e.g. Box of Fresh Bagels, Vegetable Curry, Apples" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="donationDonor">Donor Name / Organization</label>
+              <input type="text" id="donationDonor" class="form-input" placeholder="e.g. Neighbor Sarah, Sunrise Cafe">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="donationCategory">Category</label>
+              <select id="donationCategory" class="form-select">
+                <option value="Bakery">🥖 Bakery</option>
+                <option value="Cooked">🍲 Prepared Meals</option>
+                <option value="Produce">🥦 Produce</option>
+                <option value="Pantry">🥫 Canned & Grains</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="donationPortions">Portion Count / Quantity</label>
+              <input type="text" id="donationPortions" class="form-input" placeholder="e.g. 4 portions, 2 kg" value="2-3 portions">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="donationBestBefore">Pickup Window / Best Before</label>
+              <input type="text" id="donationBestBefore" class="form-input" placeholder="e.g. Today before 7 PM" value="Today before 8 PM">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="donationLocation">Pickup Address / Community Fridge Spot</label>
+            <input type="text" id="donationLocation" class="form-input" placeholder="e.g. 45 Pine Street or City Community Fridge" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Dietary Tags</label>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;">
+              <label style="display: flex; align-items: center; gap: 0.3rem;"><input type="checkbox" name="donationDietary" value="Vegetarian" checked> Vegetarian</label>
+              <label style="display: flex; align-items: center; gap: 0.3rem;"><input type="checkbox" name="donationDietary" value="Vegan"> Vegan</label>
+              <label style="display: flex; align-items: center; gap: 0.3rem;"><input type="checkbox" name="donationDietary" value="Nut-Free"> Nut-Free</label>
+              <label style="display: flex; align-items: center; gap: 0.3rem;"><input type="checkbox" name="donationDietary" value="Halal"> Halal</label>
+              <label style="display: flex; align-items: center; gap: 0.3rem;"><input type="checkbox" name="donationDietary" value="Gluten-Free"> Gluten-Free</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="donationNotes">Special Instructions</label>
+            <textarea id="donationNotes" class="form-textarea" placeholder="e.g. Sealed in airtight containers, kept chilled."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary">Post to Community Feed</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Claim Modal -->
+  <div class="modal-overlay" id="claimModal" role="dialog" aria-modal="true" aria-labelledby="modalClaimTitle">
+    <div class="modal-content" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalClaimTitle">Reserve Food Portion</h3>
+        <button class="modal-close" data-modal-close aria-label="Close dialog">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="background: var(--bg-surface-subtle); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+          <h4 id="claimFoodTitle" style="font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.25rem;">Food Title</h4>
+          <div style="font-size: 0.825rem; color: var(--text-secondary);">
+            <div>📍 <strong>Pickup:</strong> <span id="claimFoodLocation">Location</span></div>
+            <div>⏰ <strong>Available until:</strong> <span id="claimFoodTime">Time</span></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="claimantName">Your Name / Handle</label>
+          <input type="text" id="claimantName" class="form-input" placeholder="e.g. Jordan K." value="Alex M.">
+        </div>
+        <p style="font-size: 0.785rem; color: var(--text-muted); line-height: 1.4;">
+          Reserving this portion marks it off the community feed and generates a unique pickup verification code to ensure food reaches someone who needs it.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+        <button type="button" class="btn btn-primary" id="confirmClaimBtn">Confirm Reservation</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recipe Detail Modal -->
+  <div class="modal-overlay" id="recipeDetailModal" role="dialog" aria-modal="true" aria-labelledby="recipeModalTitle">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="recipeModalTitle">Recipe Title</h3>
+        <button class="modal-close" data-modal-close aria-label="Close dialog">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="recipeModalMeta" style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem;"></div>
+        <div>
+          <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.4rem;">Ingredients Needed:</h4>
+          <ul id="recipeModalIngredients" style="padding-left: 1.25rem; margin-bottom: 1rem;"></ul>
+        </div>
+        <div>
+          <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.4rem;">Preparation Steps:</h4>
+          <ol id="recipeModalSteps" style="padding-left: 1.25rem; margin-bottom: 1rem;"></ol>
+        </div>
+        <div style="background: var(--status-fresh-bg); border: 1px solid var(--status-fresh-border); padding: 0.85rem; border-radius: var(--radius-md);">
+          <strong style="color: var(--status-fresh); font-size: 0.85rem; display: block; margin-bottom: 0.2rem;">🌱 Eco Zero-Waste Secret:</strong>
+          <p id="recipeModalWasteTip" style="font-size: 0.825rem; color: var(--text-secondary); line-height: 1.4;"></p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-modal-close>Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <script>
+/* ===================== CORE APP ===================== */
+const DEFAULT_INVENTORY = [
+  { id: "inv-1", name: "Baby Spinach", category: "Produce", quantity: 1, unit: "bag (250g)", location: "Fridge", purchaseDate: getOffsetDateString(-4), expiryDate: getOffsetDateString(1), cost: 3.49, notes: "Keep in crisper drawer" },
+  { id: "inv-2", name: "Whole Milk", category: "Dairy", quantity: 1, unit: "bottle (1L)", location: "Fridge", purchaseDate: getOffsetDateString(-5), expiryDate: getOffsetDateString(2), cost: 2.89, notes: "Store on middle shelf" },
+  { id: "inv-3", name: "Artisan Sourdough Bread", category: "Bakery", quantity: 0.5, unit: "loaf", location: "Pantry", purchaseDate: getOffsetDateString(-3), expiryDate: getOffsetDateString(0), cost: 4.50, notes: "Great for croutons or breadcrumbs if stale" },
+  { id: "inv-4", name: "Free-range Eggs", category: "Dairy", quantity: 6, unit: "eggs", location: "Fridge", purchaseDate: getOffsetDateString(-7), expiryDate: getOffsetDateString(8), cost: 3.20, notes: "Float test to check freshness" },
+  { id: "inv-5", name: "Chicken Breast Fillets", category: "Meat", quantity: 400, unit: "grams", location: "Fridge", purchaseDate: getOffsetDateString(-2), expiryDate: getOffsetDateString(1), cost: 6.90, notes: "Freeze if not cooking tomorrow" },
+  { id: "inv-6", name: "Bell Peppers (Tricolor)", category: "Produce", quantity: 3, unit: "pcs", location: "Fridge", purchaseDate: getOffsetDateString(-2), expiryDate: getOffsetDateString(5), cost: 3.99, notes: "Very crisp" },
+  { id: "inv-7", name: "Greek Yogurt (Plain)", category: "Dairy", quantity: 500, unit: "grams", location: "Fridge", purchaseDate: getOffsetDateString(-4), expiryDate: getOffsetDateString(6), cost: 4.25, notes: "Unopened" },
+  { id: "inv-8", name: "Brown Rice", category: "Pantry", quantity: 1, unit: "kg", location: "Pantry", purchaseDate: getOffsetDateString(-20), expiryDate: getOffsetDateString(120), cost: 2.50, notes: "Airtight container" }
+];
+
+const DEFAULT_DONATIONS = [
+  { id: "don-1", title: "Fresh Baked Croissants & Baguettes", donor: "Artisan Corner Bakery", category: "Bakery", portions: "8-10 items", bestBefore: "Today, 8:00 PM", location: "42 Market St, Downtown", dietary: ["Vegetarian"], status: "Available", postedDate: getOffsetDateString(0), notes: "Baked fresh this morning, excess stock." },
+  { id: "don-2", title: "Vegetable Pasta Bake (Catering Surplus)", donor: "Green Leaf Cafe", category: "Cooked", portions: "5 portions", bestBefore: "Tomorrow, 12:00 PM", location: "108 University Ave", dietary: ["Vegetarian", "Nut-Free"], status: "Available", postedDate: getOffsetDateString(0), notes: "Hot packed in food-grade containers, chilled immediately." },
+  { id: "don-3", title: "Organic Bananas & Oranges Crate", donor: "Elena G. (Community Gardener)", category: "Produce", portions: "approx. 4 kg", bestBefore: "In 2 days", location: "15 Willow Way, Suburbia", dietary: ["Vegan", "Gluten-Free"], status: "Reserved", postedDate: getOffsetDateString(-1), notes: "Bountiful harvest from our backyard trees!" }
+];
+
+const DEFAULT_HISTORY = [
+  { id: "h-1", name: "Strawberries", category: "Produce", cost: 4.00, weightKg: 0.4, status: "consumed", date: getOffsetDateString(-1) },
+  { id: "h-2", name: "Cheddar Cheese", category: "Dairy", cost: 3.50, weightKg: 0.25, status: "consumed", date: getOffsetDateString(-2) },
+  { id: "h-3", name: "Bag of Carrots", category: "Produce", cost: 1.80, weightKg: 1.0, status: "consumed", date: getOffsetDateString(-3) },
+  { id: "h-4", name: "Avocado", category: "Produce", cost: 2.00, weightKg: 0.2, status: "wasted", reason: "Spoiled / Moldy", date: getOffsetDateString(-4) },
+  { id: "h-5", name: "Whole Grain Loaf", category: "Bakery", cost: 3.00, weightKg: 0.5, status: "consumed", date: getOffsetDateString(-5) },
+  { id: "h-6", name: "Cilantro bunch", category: "Produce", cost: 1.20, weightKg: 0.1, status: "wasted", reason: "Forgotten in back", date: getOffsetDateString(-6) },
+  { id: "h-7", name: "Soy Milk", category: "Dairy", cost: 2.40, weightKg: 1.0, status: "consumed", date: getOffsetDateString(-7) }
+];
+
+const AppState = { inventory: [], donations: [], history: [], theme: "light", currentTab: "dashboard" };
+
+const STORAGE_KEYS = {
+  INVENTORY: "ecofeast_inventory",
+  DONATIONS: "ecofeast_donations",
+  HISTORY: "ecofeast_history",
+  THEME: "ecofeast_theme"
+};
+
+function getOffsetDateString(daysOffset) {
+  const d = new Date();
+  d.setDate(d.getDate() + daysOffset);
+  return d.toISOString().split("T")[0];
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return "N/A";
+  const [year, month, day] = dateStr.split("-");
+  const date = new Date(year, month - 1, day);
+  return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+}
+
+function getDaysRemaining(expiryDateStr) {
+  if (!expiryDateStr) return 999;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const [y, m, d] = expiryDateStr.split("-");
+  const exp = new Date(y, m - 1, d);
+  exp.setHours(0, 0, 0, 0);
+  return Math.round((exp.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+function getStatusBadge(daysLeft) {
+  if (daysLeft < 0) return { type: "danger", label: `Expired ${Math.abs(daysLeft)}d ago`, class: "badge-danger", urgency: 3 };
+  if (daysLeft === 0) return { type: "danger", label: "Expires Today!", class: "badge-danger", urgency: 3 };
+  if (daysLeft <= 3) return { type: "warning", label: `${daysLeft}d left`, class: "badge-warning", urgency: 2 };
+  return { type: "fresh", label: `${daysLeft}d left`, class: "badge-fresh", urgency: 1 };
+}
+
+function getCategoryIcon(category) {
+  switch (category) {
+    case "Produce": return "🥦";
+    case "Dairy": return "🧀";
+    case "Meat": return "🥩";
+    case "Bakery": return "🥖";
+    case "Cooked": return "🍲";
+    case "Pantry": return "🥫";
+    default: return "📦";
+  }
+}
+
+function loadState() {
+  try {
+    const invData = localStorage.getItem(STORAGE_KEYS.INVENTORY);
+    AppState.inventory = invData ? JSON.parse(invData) : [...DEFAULT_INVENTORY];
+    const donData = localStorage.getItem(STORAGE_KEYS.DONATIONS);
+    AppState.donations = donData ? JSON.parse(donData) : [...DEFAULT_DONATIONS];
+    const histData = localStorage.getItem(STORAGE_KEYS.HISTORY);
+    AppState.history = histData ? JSON.parse(histData) : [...DEFAULT_HISTORY];
+    const savedTheme = localStorage.getItem(STORAGE_KEYS.THEME);
+    if (savedTheme) {
+      AppState.theme = savedTheme;
+    } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      AppState.theme = "dark";
+    }
+  } catch (e) {
+    console.error("Failed to load local storage state:", e);
+    AppState.inventory = [...DEFAULT_INVENTORY];
+    AppState.donations = [...DEFAULT_DONATIONS];
+    AppState.history = [...DEFAULT_HISTORY];
+  }
+  applyTheme(AppState.theme);
+}
+
+function saveInventory() { localStorage.setItem(STORAGE_KEYS.INVENTORY, JSON.stringify(AppState.inventory)); }
+function saveDonations() { localStorage.setItem(STORAGE_KEYS.DONATIONS, JSON.stringify(AppState.donations)); }
+function saveHistory() { localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(AppState.history)); }
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  AppState.theme = theme;
+  localStorage.setItem(STORAGE_KEYS.THEME, theme);
+  const themeToggle = document.getElementById("themeToggle");
+  if (themeToggle) themeToggle.title = theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode";
+}
+
+function toggleTheme() {
+  const newTheme = AppState.theme === "dark" ? "light" : "dark";
+  applyTheme(newTheme);
+  showToast(`Switched to ${newTheme} mode`, "info");
+  if (typeof renderAnalyticsCharts === "function") renderAnalyticsCharts();
+}
+
+function showToast(message, type = "info") {
+  const container = document.getElementById("toastContainer");
+  if (!container) return;
+  const toast = document.createElement("div");
+  toast.className = `toast toast-${type}`;
+  let icon = "ℹ️";
+  if (type === "success") icon = "✅";
+  if (type === "error") icon = "⚠️";
+  toast.innerHTML = `<span>${icon}</span><span style="flex: 1; font-weight: 500;">${message}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.add("toast-closing");
+    setTimeout(() => toast.remove(), 250);
+  }, 3200);
+}
+
+function openModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) { modal.classList.add("active"); document.body.style.overflow = "hidden"; }
+}
+
+function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) { modal.classList.remove("active"); document.body.style.overflow = ""; }
+}
+
+function setupModals() {
+  document.querySelectorAll(".modal-overlay").forEach(overlay => {
+    overlay.addEventListener("click", (e) => { if (e.target === overlay) closeModal(overlay.id); });
+  });
+  document.querySelectorAll(".modal-close, [data-modal-close]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const modal = btn.closest(".modal-overlay");
+      if (modal) closeModal(modal.id);
+    });
+  });
+}
+
+function switchTab(tabId) {
+  AppState.currentTab = tabId;
+  document.querySelectorAll(".tab-section").forEach(sec => sec.classList.remove("active"));
+  const targetSection = document.getElementById(`tab-${tabId}`);
+  if (targetSection) targetSection.classList.add("active");
+
+  document.querySelectorAll(".desktop-nav .nav-link").forEach(link => {
+    link.classList.toggle("active", link.dataset.tab === tabId);
+  });
+  document.querySelectorAll(".mobile-bottom-nav .bottom-nav-item").forEach(item => {
+    item.classList.toggle("active", item.dataset.tab === tabId);
+  });
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+
+  if (tabId === "dashboard") { updateDashboardMetrics(); renderRadarItems(); }
+  else if (tabId === "inventory") renderInventory();
+  else if (tabId === "community") renderDonations();
+  else if (tabId === "recipes") renderRecipeSuggestions();
+  else if (tabId === "analytics") renderAnalyticsCharts();
+}
+
+function updateDashboardMetrics() {
+  const consumedItems = AppState.history.filter(h => h.status === "consumed");
+  const totalWeightSaved = consumedItems.reduce((acc, curr) => acc + (curr.weightKg || 0.4), 0);
+  const totalMoneySaved = consumedItems.reduce((acc, curr) => acc + (curr.cost || 3.0), 0);
+  const totalCO2Saved = totalWeightSaved * 2.5;
+  const donatedCount = AppState.donations.filter(d => d.status === "Reserved").length + 2;
+
+  const elWeight = document.getElementById("metricFoodSaved");
+  const elMoney = document.getElementById("metricMoneySaved");
+  const elCO2 = document.getElementById("metricCO2Saved");
+  const elDonated = document.getElementById("metricMealsDonated");
+
+  if (elWeight) elWeight.textContent = `${totalWeightSaved.toFixed(1)} kg`;
+  if (elMoney) elMoney.textContent = `$${totalMoneySaved.toFixed(2)}`;
+  if (elCO2) elCO2.textContent = `${totalCO2Saved.toFixed(1)} kg`;
+  if (elDonated) elDonated.textContent = `${donatedCount} meals`;
+}
+
+function renderRadarItems() {
+  const radarContainer = document.getElementById("radarList");
+  if (!radarContainer) return;
+
+  const urgentItems = AppState.inventory
+    .map(item => ({ ...item, daysLeft: getDaysRemaining(item.expiryDate), badge: getStatusBadge(getDaysRemaining(item.expiryDate)) }))
+    .filter(item => item.daysLeft <= 3)
+    .sort((a, b) => a.daysLeft - b.daysLeft)
+    .slice(0, 4);
+
+  if (urgentItems.length === 0) {
+    radarContainer.innerHTML = `<div style="text-align: center; padding: 1.5rem 0; color: var(--text-secondary); font-size: 0.9rem;">🎉 All pantry and fridge items are fresh! Nothing expiring soon.</div>`;
+    return;
+  }
+
+  radarContainer.innerHTML = urgentItems.map(item => `
+    <div class="radar-item">
+      <div class="radar-item-left">
+        <span class="radar-icon">${getCategoryIcon(item.category)}</span>
+        <div>
+          <div class="radar-name">${escapeHtml(item.name)}</div>
+          <div class="radar-meta">
+            <span>${item.quantity} ${item.unit}</span><span>•</span><span>${item.location}</span>
+          </div>
+        </div>
+      </div>
+      <div class="radar-item-actions">
+        <span class="badge ${item.badge.class}">${item.badge.label}</span>
+        <button class="btn btn-secondary btn-sm" onclick="handleItemConsumed('${item.id}')" title="Mark as Consumed">✓ Eaten</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+function escapeHtml(str) {
+  if (!str) return "";
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
+
+function resetSampleData() {
+  if (confirm("Reset all inventory, community posts, and analytics to demo sample data?")) {
+    AppState.inventory = [...DEFAULT_INVENTORY];
+    AppState.donations = [...DEFAULT_DONATIONS];
+    AppState.history = [...DEFAULT_HISTORY];
+    saveInventory(); saveDonations(); saveHistory();
+    switchTab(AppState.currentTab);
+    showToast("Application data reset to clean demo state", "success");
+  }
+}
+
+function exportDataAsJSON() {
+  const data = { inventory: AppState.inventory, donations: AppState.donations, history: AppState.history, exportedAt: new Date().toISOString() };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `ecofeast-foodwaste-data-${getOffsetDateString(0)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast("Inventory & waste data exported successfully", "success");
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadState();
+  setupModals();
+
+  document.querySelectorAll("[data-tab]").forEach(el => {
+    el.addEventListener("click", () => switchTab(el.dataset.tab));
+  });
+
+  const themeToggle = document.getElementById("themeToggle");
+  if (themeToggle) themeToggle.addEventListener("click", toggleTheme);
+
+  updateDashboardMetrics();
+  renderRadarItems();
+
+  if (typeof initInventoryModule === "function") initInventoryModule();
+  if (typeof initDonationsModule === "function") initDonationsModule();
+  if (typeof initRecipesModule === "function") initRecipesModule();
+  if (typeof initAnalyticsModule === "function") initAnalyticsModule();
+});
+
+/* ===================== INVENTORY ===================== */
+let currentInventoryFilter = "all";
+let currentStatusFilter = "all";
+let currentSearchQuery = "";
+let currentSort = "expiry-asc";
+let itemPendingWaste = null;
+
+function initInventoryModule() {
+  const searchInput = document.getElementById("inventorySearch");
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      currentSearchQuery = e.target.value.toLowerCase().trim();
+      renderInventory();
+    });
+  }
+
+  document.querySelectorAll("[data-location-filter]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-location-filter]").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      currentInventoryFilter = btn.dataset.locationFilter;
+      renderInventory();
+    });
+  });
+
+  document.querySelectorAll("[data-status-filter]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-status-filter]").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      currentStatusFilter = btn.dataset.statusFilter;
+      renderInventory();
+    });
+  });
+
+  const sortSelect = document.getElementById("inventorySort");
+  if (sortSelect) {
+    sortSelect.addEventListener("change", (e) => { currentSort = e.target.value; renderInventory(); });
+  }
+
+  const addItemForm = document.getElementById("addItemForm");
+  if (addItemForm) addItemForm.addEventListener("submit", handleAddItemSubmit);
+
+  const wasteConfirmBtn = document.getElementById("confirmWasteBtn");
+  if (wasteConfirmBtn) wasteConfirmBtn.addEventListener("click", handleConfirmWaste);
+
+  const purchaseDateInput = document.getElementById("itemPurchaseDate");
+  const expiryDateInput = document.getElementById("itemExpiryDate");
+  if (purchaseDateInput) purchaseDateInput.value = getOffsetDateString(0);
+  if (expiryDateInput) expiryDateInput.value = getOffsetDateString(5);
+
+  renderInventory();
+}
+
+function renderInventory() {
+  const container = document.getElementById("inventoryGrid");
+  const countBadge = document.getElementById("inventoryCountBadge");
+  if (!container) return;
+
+  let items = AppState.inventory.map(item => {
+    const daysLeft = getDaysRemaining(item.expiryDate);
+    return { ...item, daysLeft, badge: getStatusBadge(daysLeft) };
+  });
+
+  if (currentInventoryFilter !== "all") items = items.filter(item => item.location === currentInventoryFilter);
+
+  if (currentStatusFilter === "expiring") items = items.filter(item => item.daysLeft >= 0 && item.daysLeft <= 3);
+  else if (currentStatusFilter === "expired") items = items.filter(item => item.daysLeft < 0);
+  else if (currentStatusFilter === "fresh") items = items.filter(item => item.daysLeft > 3);
+
+  if (currentSearchQuery) {
+    items = items.filter(item =>
+      item.name.toLowerCase().includes(currentSearchQuery) ||
+      item.category.toLowerCase().includes(currentSearchQuery) ||
+      (item.notes && item.notes.toLowerCase().includes(currentSearchQuery))
+    );
+  }
+
+  if (currentSort === "expiry-asc") items.sort((a, b) => a.daysLeft - b.daysLeft);
+  else if (currentSort === "expiry-desc") items.sort((a, b) => b.daysLeft - a.daysLeft);
+  else if (currentSort === "name-asc") items.sort((a, b) => a.name.localeCompare(b.name));
+
+  if (countBadge) countBadge.textContent = `${items.length} ${items.length === 1 ? 'item' : 'items'}`;
+
+  if (items.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">🥗</div>
+        <div class="empty-state-title">No items found</div>
+        <div class="empty-state-desc">Try clearing filters or add new fresh ingredients to your pantry or fridge!</div>
+        <button class="btn btn-primary btn-sm" onclick="openModal('addItemModal')" style="margin-top: 0.5rem;">+ Add Food Item</button>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = items.map(item => {
+    let percent = 100;
+    if (item.purchaseDate && item.expiryDate) {
+      const start = new Date(item.purchaseDate).getTime();
+      const end = new Date(item.expiryDate).getTime();
+      const now = new Date().getTime();
+      const totalSpan = end - start;
+      if (totalSpan > 0) percent = Math.max(0, Math.min(100, ((end - now) / totalSpan) * 100));
+    } else {
+      percent = item.daysLeft > 5 ? 100 : item.daysLeft > 0 ? (item.daysLeft / 5) * 100 : 0;
+    }
+
+    let progressColor = "var(--status-fresh)";
+    if (item.daysLeft <= 0) progressColor = "var(--status-danger)";
+    else if (item.daysLeft <= 3) progressColor = "var(--status-warning)";
+
+    return `
+      <div class="inventory-card">
+        <div>
+          <div class="inventory-card-header">
+            <div class="inventory-card-title-group">
+              <div class="category-avatar" title="${escapeHtml(item.category)}">${getCategoryIcon(item.category)}</div>
+              <div>
+                <div class="item-name">${escapeHtml(item.name)}</div>
+                <div class="item-quantity">${item.quantity} ${escapeHtml(item.unit)} • ${item.location}</div>
+              </div>
+            </div>
+            <span class="badge ${item.badge.class}">${item.badge.label}</span>
+          </div>
+          <div class="progress-track" title="Shelf life remaining">
+            <div class="progress-fill" style="width: ${percent}%; background-color: ${progressColor};"></div>
+          </div>
+          <div class="inventory-card-body" style="margin-top: 0.75rem;">
+            <div class="inventory-meta-row"><span>Expiry Date:</span><strong>${formatDate(item.expiryDate)}</strong></div>
+            <div class="inventory-meta-row"><span>Estimated Value:</span><span>$${parseFloat(item.cost || 0).toFixed(2)}</span></div>
+            ${item.notes ? `<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem; font-style: italic;">"${escapeHtml(item.notes)}"</div>` : ''}
+          </div>
+        </div>
+        <div class="inventory-card-actions">
+          <div class="inventory-actions-group">
+            <button class="btn btn-secondary btn-sm" onclick="handleItemConsumed('${item.id}')" title="Consumed item">✓ Eaten</button>
+            <button class="btn btn-secondary btn-sm text-danger" onclick="openWasteModal('${item.id}')" title="Log as wasted">✕ Wasted</button>
+          </div>
+          <div class="inventory-actions-group">
+            <button class="btn btn-secondary btn-sm" onclick="prepareDonationFromItem('${item.id}')" title="Donate surplus">🤝 Donate</button>
+            <button class="btn btn-secondary btn-sm" onclick="handleDeleteItem('${item.id}')" title="Delete record">🗑️</button>
+          </div>
+        </div>
+      </div>`;
+  }).join("");
+}
+
+function handleAddItemSubmit(e) {
+  e.preventDefault();
+
+  const name = document.getElementById("itemName").value.trim();
+  const category = document.getElementById("itemCategory").value;
+  const quantity = parseFloat(document.getElementById("itemQuantity").value) || 1;
+  const unit = document.getElementById("itemUnit").value.trim() || "pcs";
+  const location = document.getElementById("itemLocation").value;
+  const purchaseDate = document.getElementById("itemPurchaseDate").value || getOffsetDateString(0);
+  const expiryDate = document.getElementById("itemExpiryDate").value;
+  const cost = parseFloat(document.getElementById("itemCost").value) || 3.00;
+  const notes = document.getElementById("itemNotes").value.trim();
+
+  if (!name || !expiryDate) {
+    showToast("Please provide the item name and expiry date", "error");
+    return;
+  }
+
+  AppState.inventory.unshift({ id: "inv-" + Date.now(), name, category, quantity, unit, location, purchaseDate, expiryDate, cost, notes });
+  saveInventory();
+  renderInventory();
+  updateDashboardMetrics();
+  renderRadarItems();
+
+  closeModal("addItemModal");
+  document.getElementById("addItemForm").reset();
+  document.getElementById("itemPurchaseDate").value = getOffsetDateString(0);
+  document.getElementById("itemExpiryDate").value = getOffsetDateString(5);
+
+  showToast(`"${name}" added to your ${location}!`, "success");
+}
+
+function handleItemConsumed(itemId) {
+  const itemIndex = AppState.inventory.findIndex(i => i.id === itemId);
+  if (itemIndex === -1) return;
+  const item = AppState.inventory[itemIndex];
+
+  let weightKg = 0.35;
+  if (item.unit && item.unit.includes("kg")) weightKg = item.quantity;
+  else if (item.unit && item.unit.includes("g")) weightKg = item.quantity * 0.001;
+  else if (item.category === "Produce") weightKg = 0.3 * item.quantity;
+  else if (item.category === "Dairy") weightKg = 0.5 * item.quantity;
+
+  AppState.history.unshift({
+    id: "h-" + Date.now(), name: item.name, category: item.category,
+    cost: item.cost || 3.00, weightKg: Math.max(0.1, weightKg), status: "consumed", date: getOffsetDateString(0)
+  });
+  AppState.inventory.splice(itemIndex, 1);
+
+  saveInventory(); saveHistory();
+  renderInventory(); updateDashboardMetrics(); renderRadarItems();
+  showToast(`Yum! Marked "${item.name}" as consumed. Food saved!`, "success");
+}
+
+function openWasteModal(itemId) {
+  const item = AppState.inventory.find(i => i.id === itemId);
+  if (!item) return;
+  itemPendingWaste = item;
+  const nameTarget = document.getElementById("wasteItemName");
+  if (nameTarget) nameTarget.textContent = item.name;
+  openModal("wasteReasonModal");
+}
+
+function handleConfirmWaste() {
+  if (!itemPendingWaste) return;
+  const reasonSelect = document.getElementById("wasteReasonSelect");
+  const reason = reasonSelect ? reasonSelect.value : "Spoiled / Expired";
+
+  let weightKg = 0.35;
+  if (itemPendingWaste.unit && itemPendingWaste.unit.includes("kg")) weightKg = itemPendingWaste.quantity;
+  else if (itemPendingWaste.unit && itemPendingWaste.unit.includes("g")) weightKg = itemPendingWaste.quantity * 0.001;
+
+  AppState.history.unshift({
+    id: "h-" + Date.now(), name: itemPendingWaste.name, category: itemPendingWaste.category,
+    cost: itemPendingWaste.cost || 3.00, weightKg: Math.max(0.1, weightKg),
+    status: "wasted", reason: reason, date: getOffsetDateString(0)
+  });
+  AppState.inventory = AppState.inventory.filter(i => i.id !== itemPendingWaste.id);
+
+  saveInventory(); saveHistory();
+  renderInventory(); updateDashboardMetrics(); renderRadarItems();
+
+  closeModal("wasteReasonModal");
+  showToast(`Logged "${itemPendingWaste.name}" as wasted (${reason}). Check tips in Analytics!`, "info");
+  itemPendingWaste = null;
+}
+
+function handleDeleteItem(itemId) {
+  if (confirm("Remove this item from your inventory?")) {
+    AppState.inventory = AppState.inventory.filter(i => i.id !== itemId);
+    saveInventory();
+    renderInventory(); updateDashboardMetrics(); renderRadarItems();
+    showToast("Item deleted", "info");
+  }
+}
+
+function prepareDonationFromItem(itemId) {
+  const item = AppState.inventory.find(i => i.id === itemId);
+  if (!item) return;
+  switchTab("community");
+  openModal("addDonationModal");
+  const titleInput = document.getElementById("donationTitle");
+  const catInput = document.getElementById("donationCategory");
+  const portionsInput = document.getElementById("donationPortions");
+  if (titleInput) titleInput.value = item.name;
+  if (catInput) catInput.value = item.category;
+  if (portionsInput) portionsInput.value = `${item.quantity} ${item.unit}`;
+}
+
+/* ===================== DONATIONS ===================== */
+const COMMUNITY_FOODBANKS = [
+  { id: "fb-1", name: "City Central Community Fridge", type: "24/7 Public Fridge & Pantry", address: "244 Elm Street (outside library)", hours: "Open 24/7 (walk-in)", phone: "(555) 234-5678", accepts: ["Fresh Fruit & Veg", "Sealed Dairy", "Packaged Bakery", "Canned Goods"], notes: "Leave what you can, take what you need. Please label expiry dates." },
+  { id: "fb-2", name: "Hope Valley Food Rescue & Bank", type: "Certified Food Bank", address: "710 Industrial Pkwy, Bldg 4", hours: "Mon – Fri: 8:30 AM – 4:30 PM", phone: "(555) 876-5432", accepts: ["Commercial Surplus", "Bulk Produce", "Non-Perishables", "Frozen Meats"], notes: "Large drop-offs welcomed. Tax-deductible donation receipts provided." },
+  { id: "fb-3", name: "Nourish Table Mutual Aid Kitchen", type: "Soup Kitchen & Meal Rescue", address: "52 Church Ave, North District", hours: "Daily: 11:00 AM – 7:00 PM", phone: "(555) 345-6789", accepts: ["Prepared Surplus (from licensed kitchens)", "Fresh Produce", "Cooking Oils & Grains"], notes: "Distributes over 250 warm meals daily to community members in need." },
+  { id: "fb-4", name: "Sunlight Neighborhood Pantry", type: "Pantry & Community Cupboard", address: "89 Sunrise Blvd", hours: "Tue, Thu, Sat: 9:00 AM – 1:00 PM", phone: "(555) 987-1234", accepts: ["Canned Soups & Beans", "Baby Food & Formula", "Pasta & Rice", "Root Vegetables"], notes: "Friendly volunteers available to assist with unloading." }
+];
+
+let donationCategoryFilter = "all";
+let donationStatusFilter = "all";
+let foodbankSearchQuery = "";
+let currentClaimItem = null;
+
+function initDonationsModule() {
+  document.querySelectorAll("[data-donation-cat]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-donation-cat]").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      donationCategoryFilter = btn.dataset.donationCat;
+      renderDonations();
+    });
+  });
+
+  const fbSearch = document.getElementById("foodbankSearch");
+  if (fbSearch) {
+    fbSearch.addEventListener("input", (e) => {
+      foodbankSearchQuery = e.target.value.toLowerCase().trim();
+      renderFoodbanks();
+    });
+  }
+
+  const addDonationForm = document.getElementById("addDonationForm");
+  if (addDonationForm) addDonationForm.addEventListener("submit", handleAddDonationSubmit);
+
+  const confirmClaimBtn = document.getElementById("confirmClaimBtn");
+  if (confirmClaimBtn) confirmClaimBtn.addEventListener("click", handleConfirmClaim);
+
+  renderDonations();
+  renderFoodbanks();
+}
+
+function renderDonations() {
+  const container = document.getElementById("donationList");
+  if (!container) return;
+
+  let list = [...AppState.donations];
+  if (donationCategoryFilter !== "all") list = list.filter(item => item.category === donationCategoryFilter);
+
+  if (list.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">🤝</div>
+        <div class="empty-state-title">No community listings found</div>
+        <div class="empty-state-desc">Have extra food to spare from your cafe, event, or kitchen? Post a donation!</div>
+        <button class="btn btn-primary btn-sm" onclick="openModal('addDonationModal')" style="margin-top: 0.5rem;">+ Post Surplus Food</button>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = list.map(item => {
+    const isReserved = item.status === "Reserved";
+    const statusBadgeClass = isReserved ? "badge-secondary" : "badge-fresh";
+    return `
+      <div class="donation-card">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+            <span class="donor-badge">👤 ${escapeHtml(item.donor)}</span>
+            <span class="badge ${statusBadgeClass}">${item.status}</span>
+          </div>
+          <h4 style="font-size: 1.05rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.35rem;">${escapeHtml(item.title)}</h4>
+          <div style="font-size: 0.825rem; color: var(--text-secondary); display: flex; flex-direction: column; gap: 0.25rem; margin-bottom: 0.75rem;">
+            <div>📦 <strong>Portions:</strong> ${escapeHtml(item.portions)}</div>
+            <div>⏰ <strong>Pickup Window:</strong> ${escapeHtml(item.bestBefore)}</div>
+            <div>📍 <strong>Location:</strong> ${escapeHtml(item.location)}</div>
+          </div>
+          ${item.notes ? `<div style="font-size: 0.8rem; color: var(--text-muted); background: var(--bg-surface-subtle); padding: 0.5rem; border-radius: var(--radius-sm); margin-bottom: 0.75rem;">"${escapeHtml(item.notes)}"</div>` : ''}
+          <div class="donation-tags">
+            ${(item.dietary || []).map(tag => `<span class="ingredient-chip">${escapeHtml(tag)}</span>`).join("")}
+          </div>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 0.75rem; border-top: 1px solid var(--border-subtle);">
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Posted ${formatDate(item.postedDate)}</span>
+          ${isReserved
+            ? `<span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">🔒 Reserved</span>`
+            : `<button class="btn btn-primary btn-sm" onclick="openClaimModal('${item.id}')">Claim Portion</button>`}
+        </div>
+      </div>`;
+  }).join("");
+}
+
+function renderFoodbanks() {
+  const container = document.getElementById("foodbankList");
+  if (!container) return;
+
+  let list = COMMUNITY_FOODBANKS;
+  if (foodbankSearchQuery) {
+    list = list.filter(fb =>
+      fb.name.toLowerCase().includes(foodbankSearchQuery) ||
+      fb.address.toLowerCase().includes(foodbankSearchQuery) ||
+      fb.accepts.some(tag => tag.toLowerCase().includes(foodbankSearchQuery))
+    );
+  }
+
+  if (list.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state" style="grid-column: 1 / -1;">
+        <div class="empty-state-icon">🏢</div>
+        <div class="empty-state-title">No food banks matching search</div>
+        <div class="empty-state-desc">Try clearing your search query to see all registered community pantries.</div>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = list.map(fb => `
+    <div class="foodbank-card">
+      <div class="foodbank-header">
+        <div>
+          <div class="foodbank-title">${escapeHtml(fb.name)}</div>
+          <div style="font-size: 0.785rem; color: var(--primary); font-weight: 600;">${escapeHtml(fb.type)}</div>
+        </div>
+        <span class="badge badge-fresh">Active Hub</span>
+      </div>
+      <div class="foodbank-info-item"><span>📍</span><span>${escapeHtml(fb.address)}</span></div>
+      <div class="foodbank-info-item"><span>🕒</span><span>${escapeHtml(fb.hours)}</span></div>
+      <div class="foodbank-info-item"><span>📞</span><span>${escapeHtml(fb.phone)}</span></div>
+      <div style="margin-top: 0.25rem;">
+        <div style="font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.25rem;">Accepts Donations:</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.3rem;">
+          ${fb.accepts.map(tag => `<span class="ingredient-chip" style="font-size: 0.7rem;">${escapeHtml(tag)}</span>`).join("")}
+        </div>
+      </div>
+      <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-subtle);">
+        <button class="btn btn-secondary btn-sm" style="flex: 1;" onclick="handleDirections('${escapeHtml(fb.name)}')">🗺️ Directions</button>
+        <button class="btn btn-secondary btn-sm" style="flex: 1;" onclick="handleContactHub('${escapeHtml(fb.name)}', '${escapeHtml(fb.phone)}')">📞 Call</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+function handleAddDonationSubmit(e) {
+  e.preventDefault();
+
+  const title = document.getElementById("donationTitle").value.trim();
+  const donor = document.getElementById("donationDonor").value.trim() || "Kind Neighbor";
+  const category = document.getElementById("donationCategory").value;
+  const portions = document.getElementById("donationPortions").value.trim() || "2-3 portions";
+  const bestBefore = document.getElementById("donationBestBefore").value.trim() || "Within 24 hours";
+  const location = document.getElementById("donationLocation").value.trim() || "Downtown Pick-up";
+  const notes = document.getElementById("donationNotes").value.trim();
+
+  const dietary = Array.from(document.querySelectorAll("input[name='donationDietary']:checked")).map(cb => cb.value);
+
+  if (!title) {
+    showToast("Please provide the food donation title", "error");
+    return;
+  }
+
+  AppState.donations.unshift({
+    id: "don-" + Date.now(), title, donor, category, portions, bestBefore, location,
+    dietary: dietary.length > 0 ? dietary : ["Food Rescue"],
+    status: "Available", postedDate: getOffsetDateString(0), notes
+  });
+  saveDonations();
+  renderDonations();
+  updateDashboardMetrics();
+
+  closeModal("addDonationModal");
+  document.getElementById("addDonationForm").reset();
+  showToast(`Surplus food "${title}" posted to the community! ❤️`, "success");
+}
+
+function openClaimModal(donationId) {
+  const item = AppState.donations.find(d => d.id === donationId);
+  if (!item) return;
+  currentClaimItem = item;
+
+  const titleTarget = document.getElementById("claimFoodTitle");
+  const locationTarget = document.getElementById("claimFoodLocation");
+  const timeTarget = document.getElementById("claimFoodTime");
+  if (titleTarget) titleTarget.textContent = item.title;
+  if (locationTarget) locationTarget.textContent = item.location;
+  if (timeTarget) timeTarget.textContent = item.bestBefore;
+
+  openModal("claimModal");
+}
+
+function handleConfirmClaim() {
+  if (!currentClaimItem) return;
+  const claimantName = document.getElementById("claimantName").value.trim() || "Community Member";
+  const code = Math.floor(1000 + Math.random() * 9000);
+
+  currentClaimItem.status = "Reserved";
+  currentClaimItem.reservedBy = claimantName;
+  currentClaimItem.claimCode = code;
+
+  saveDonations();
+  renderDonations();
+  updateDashboardMetrics();
+
+  closeModal("claimModal");
+  alert(`🎉 Reservation Confirmed!\n\nPickup Code: ECO-${code}\nItem: ${currentClaimItem.title}\nLocation: ${currentClaimItem.location}\n\nPlease present this code upon pickup.`);
+  showToast(`Reserved "${currentClaimItem.title}". Code: ECO-${code}`, "success");
+  currentClaimItem = null;
+}
+
+function handleDirections(name) { showToast(`Opening navigation route to ${name}...`, "info"); }
+function handleContactHub(name, phone) { showToast(`Calling ${name} at ${phone}...`, "info"); }
+
+/* ===================== RECIPES & STORAGE ===================== */
+const ZERO_WASTE_RECIPES = [
+  {
+    id: "rec-1", title: "Crisper Drawer Veggie Frittata", time: "20 mins", difficulty: "Easy", servings: "3-4",
+    ingredients: ["Eggs", "Spinach", "Peppers", "Milk", "Cheese"],
+    description: "The ultimate solution for sad-looking greens and soft peppers. Whisk, bake, and enjoy warm or cold.",
+    steps: [
+      "Preheat skillet over medium heat with a drizzle of oil.",
+      "Chop whatever peppers, onions, or vegetables you have on hand and sauté for 4-5 mins.",
+      "Add baby spinach or wilting greens; toss until just wilted.",
+      "Whisk 4-6 eggs with a splash of milk, salt, pepper, and cheese.",
+      "Pour egg mixture over veggies, cover with a lid on low heat for 8-10 minutes until eggs are set.",
+      "Slice into wedges and serve with toast or salad."
+    ],
+    wasteTip: "Any leafy green (kale, arugula, chard) or leftover cooked potato works wonderfully in a frittata."
+  },
+  {
+    id: "rec-2", title: "Golden Artisan French Toast Bake", time: "15 mins", difficulty: "Easy", servings: "2-3",
+    ingredients: ["Bread", "Milk", "Eggs", "Cinnamon", "Yogurt"],
+    description: "Dry, stale artisan sourdough or sandwich bread absorbs the egg-custard mixture even better than fresh bread!",
+    steps: [
+      "Whisk together 2 eggs, 1/2 cup milk, 1 tsp cinnamon, and a pinch of sugar or vanilla.",
+      "Cut stale bread into thick slices or 1-inch cubes.",
+      "Dip slices into the egg custard, letting them soak for 30-40 seconds per side.",
+      "Cook on a lightly buttered skillet over medium heat for 3-4 minutes per side until golden brown.",
+      "Serve warm topped with yogurt, fruit, or honey."
+    ],
+    wasteTip: "If you have too much stale bread, blitz it in a blender and freeze homemade breadcrumbs for up to 6 months."
+  },
+  {
+    id: "rec-3", title: "Leftover Roasted Chicken & Pepper Skillet", time: "25 mins", difficulty: "Medium", servings: "2",
+    ingredients: ["Chicken", "Peppers", "Rice", "Spices", "Garlic"],
+    description: "Juicy, colorful one-skillet meal that turns raw fillets or leftover cooked poultry into a restaurant-worthy bowl.",
+    steps: [
+      "Slice chicken breast and bell peppers into thin strips.",
+      "Sear chicken in a hot skillet with olive oil, garlic, paprika, and salt until cooked through (6-7 mins).",
+      "Remove chicken, toss sliced peppers and any lingering onions into the same pan to pick up fond.",
+      "Add cooked brown rice or leftover grains directly to skillet to crisp up.",
+      "Combine chicken back into the skillet, toss together, and finish with a squeeze of lemon."
+    ],
+    wasteTip: "Keep cooked leftover chicken bones in a freezer bag to boil into homemade bone broth later."
+  },
+  {
+    id: "rec-4", title: "Overripe Banana Oat Blender Pancakes", time: "15 mins", difficulty: "Easy", servings: "2",
+    ingredients: ["Bananas", "Oats", "Milk", "Eggs", "Honey"],
+    description: "Naturally sweet pancakes made entirely with overripe brown bananas. No refined flour needed.",
+    steps: [
+      "In a blender, combine 1 large brown spotted banana, 1 cup oats, 1 egg, and 1/3 cup milk.",
+      "Blend on high until a smooth batter forms. Let sit for 3 minutes to thicken.",
+      "Pour 1/4 cup portions onto a warm non-stick skillet.",
+      "Flip when bubbles appear on the surface (about 2 mins), and cook another 1-2 mins.",
+      "Top with a dollop of Greek yogurt or a drizzle of maple syrup."
+    ],
+    wasteTip: "Never toss brown bananas! Peel, chop, and freeze them in a container for instant smoothie bases."
+  },
+  {
+    id: "rec-5", title: "Scrap & Peels Vegetable Broth", time: "45 mins", difficulty: "Easy", servings: "6 cups broth",
+    ingredients: ["Carrots", "Celery", "Onions", "Herbs", "Garlic"],
+    description: "Free, rich, aromatic vegetable stock made exclusively from peels, stems, and leftover vegetable scraps.",
+    steps: [
+      "Collect carrot tops, onion skins, celery ends, mushroom stems, and herb sprigs in a freezer bag over the week.",
+      "Empty scraps into a large pot and cover with 8 cups of water.",
+      "Add 1 bay leaf, whole peppercorns, and 1 tsp salt.",
+      "Bring to a boil, then reduce heat and simmer gently for 40-50 minutes.",
+      "Strain through a fine mesh sieve. Store in jars in fridge (1 week) or freeze (3 months)."
+    ],
+    wasteTip: "Avoid bitter brassicas like broccoli or cabbage in stocks as they can turn the broth pungent."
+  },
+  {
+    id: "rec-6", title: "Hearty Zero-Waste Pantry Minestrone", time: "30 mins", difficulty: "Easy", servings: "4",
+    ingredients: ["Beans", "Rice", "Spinach", "Tomatoes", "Garlic"],
+    description: "A nourishing Italian vegetable soup that accommodates whatever legumes, wilting greens, and grains you have.",
+    steps: [
+      "Sauté chopped garlic, onion, and any limp veggies in 1 tbsp olive oil in a soup pot.",
+      "Add a can of diced tomatoes and 4 cups of vegetable broth.",
+      "Stir in drained canned beans and dry pasta or pre-cooked brown rice.",
+      "Simmer for 15 minutes until vegetables are tender.",
+      "Stir in chopped baby spinach or leafy greens in the last 2 minutes until wilted.",
+      "Ladle into bowls with a sprinkle of cheese."
+    ],
+    wasteTip: "Toss in the hard rind of parmesan cheese while simmering for incredible umami flavor."
+  }
+];
+
+const STORAGE_GUIDE = [
+  { name: "Apples", category: "Produce", location: "Fridge Crisper", shelfLife: "3–6 weeks", tips: "Keep away from leafy greens and bananas! Apples produce ethylene gas which accelerates ripening in neighboring produce." },
+  { name: "Avocados", category: "Produce", location: "Counter, then Fridge", shelfLife: "3–7 days", tips: "Let unripe hard avocados sit at room temp. Once ripe and yielding to gentle pressure, move to the fridge to stall further ripening." },
+  { name: "Bananas", category: "Produce", location: "Pantry / Counter", shelfLife: "3–5 days", tips: "Wrap banana crown stems in beeswax wrap or foil to reduce ethylene release. Peel and freeze overripe bananas for smoothies." },
+  { name: "Berries (Strawberries, Blueberries)", category: "Produce", location: "Fridge (dry)", shelfLife: "5–8 days", tips: "DO NOT wash berries until ready to eat! Store in a ventilated container lined with a dry paper towel to catch dampness." },
+  { name: "Bread & Bakery", category: "Bakery", location: "Pantry or Freezer", shelfLife: "3–4 days (counter) or 3 mos (freezer)", tips: "Never store bread in the fridge—cold temps speed up starch retrogradation (staling). Slice and freeze what you won't eat in 3 days." },
+  { name: "Carrots & Celery", category: "Produce", location: "Fridge", shelfLife: "2–3 weeks", tips: "Keep limp celery and carrots crunchy by slicing and storing submerged upright in a jar of fresh cold water in your fridge." },
+  { name: "Cheese (Hard & Semi-Hard)", category: "Dairy", location: "Fridge (Cheese drawer)", shelfLife: "2–4 weeks", tips: "Wrap cheese in parchment paper or beeswax wrap rather than plastic wrap. Cheese needs to breathe without drying out." },
+  { name: "Fresh Herbs (Parsley, Cilantro)", category: "Produce", location: "Fridge Door", shelfLife: "10–14 days", tips: "Trim herb stems and place upright in a jar with 1 inch of water like a fresh flower bouquet. Loosely cover tops with a reusable bag." },
+  { name: "Leafy Greens (Spinach, Lettuce)", category: "Produce", location: "Fridge Crisper", shelfLife: "5–7 days", tips: "Moisture is the enemy. Slip a folded paper towel or clean cloth inside the greens bag to absorb excess condensation." },
+  { name: "Milk & Cream", category: "Dairy", location: "Fridge Main Shelves", shelfLife: "7–10 days", tips: "Never store dairy on the refrigerator door! The door temperature fluctuates every time it opens. Keep it on middle or bottom shelves." },
+  { name: "Mushrooms", category: "Produce", location: "Fridge", shelfLife: "5–7 days", tips: "Transfer fresh mushrooms to a brown paper bag. Plastic trapping moisture causes mushrooms to turn slimy quickly." },
+  { name: "Potatoes & Onions", category: "Pantry", location: "Cool Dark Pantry", shelfLife: "2–4 weeks", tips: "Store separately! Onions emit moisture and gases that make potatoes sprout and soften prematurely." },
+  { name: "Tomatoes", category: "Produce", location: "Counter (Room Temp)", shelfLife: "4–6 days", tips: "Keep stem-down on counter out of direct sunlight. Chilling whole raw tomatoes destroys flavor enzymes and gives a mealy texture." }
+];
+
+let selectedRecipe = null;
+let storageSearchQuery =
